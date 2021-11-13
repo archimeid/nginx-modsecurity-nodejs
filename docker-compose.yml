@@ -1,0 +1,25 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  nginx:
+    image: owasp/modsecurity:nginx
+    environment:
+      - BACKEND=http://my-secured-app:3000
+    ports:
+      - "8042:80"
+    networks:
+      - my-network
+  my-secured-app:
+    image: node
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8043:3000"
+    volumes:
+      - ./app:/home/node/app
+    command: "node index.js"
+    networks:
+      - my-network
+networks:
+  my-network:
